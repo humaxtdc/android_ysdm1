@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ysdm_01</string>
+    <string name="title_activity_display">DisplayActivity</string>
+    <string name="_1_display">1. Display</string>
+    <string name="_2_handler_thread"><![CDATA[2. Handler & Thread]]></string>
+    <string name="_3_datastorage">3. DataStorage</string>
+    <string name="_1_window_size">1. Window Size:</string>
+</resources>
