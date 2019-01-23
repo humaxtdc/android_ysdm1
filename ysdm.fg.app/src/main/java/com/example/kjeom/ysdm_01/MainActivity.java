@@ -39,4 +39,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DisplayActivity.class);
         startActivity(intent);
     }
+
+    public void goToActivity2(android.view.View view) {
+        this.view = view;
+        Intent intent = new Intent(this, ThreadHandlingActivity.class);
+        startActivity(intent);
+    }
 }
