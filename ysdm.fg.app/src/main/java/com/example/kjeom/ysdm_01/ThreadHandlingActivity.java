@@ -1,6 +1,7 @@
 package com.example.kjeom.ysdm_01;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class ThreadHandlingActivity extends AppCompatActivity {
         });
 
         initE2_1();
+        initE2_3();
     }
 
     private void makeYourCode(byte[] inputBuffer) {
@@ -53,7 +56,9 @@ public class ThreadHandlingActivity extends AppCompatActivity {
         mMyProcess.sendBuffer(processedBuffer);
     }
 
-    // ================ E 2_1 ========================
+    /*
+     * ================ E2.1 ========================
+     */
     private boolean runStatus = true;
     private List<StringBuffer> mList;   // 수정 E2.1: mList 변수 선언
 
@@ -83,6 +88,8 @@ public class ThreadHandlingActivity extends AppCompatActivity {
     }
 
     private void runRemove() {
+        runStatus = true;   // 수정 E2.1: ADD 버튼이 눌리면 runStatus 값을 true로 만들어 준다.
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -111,4 +118,53 @@ public class ThreadHandlingActivity extends AppCompatActivity {
         runStatus = false;
     }
 
+    /*
+     * ================ E2.3 ========================
+     */
+    private TextView mMemStatView;
+    private Handler mE23Handler;
+    private Runnable mE23MemReporter;
+
+    private void initE2_3() {
+        mMemStatView = (TextView)findViewById(R.id.textView_2_3);
+        mE23MemReporter = new MemReporter();
+        mE23Handler = new Handler();
+        mE23Handler.postDelayed(mE23MemReporter, 500);
+    }
+
+    private class MemReporter implements Runnable {
+        @Override
+        public void run() {
+            Runtime runtime = Runtime.getRuntime();
+            long usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / 1048576L;
+            long maxHeapSizeInMB = runtime.maxMemory() / 1048576L;
+            String memStat = String.format("%d / %d MB", usedMemInMB, maxHeapSizeInMB);
+            mMemStatView.setText(memStat);
+            mE23Handler.postDelayed(mE23MemReporter, 500);
+        }
+    };
+
+    private class Allocer extends Thread {
+        List<byte[]> buf = new ArrayList<byte[]>();
+
+        private void alloc20MB() {
+            byte aaa[] = new byte[20 * 1024 * 1024];
+            buf.add(aaa);
+        }
+        public void run() {
+            while (true) {
+                alloc20MB();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void onE23Start(android.view.View view) {
+        Allocer allocer = new Allocer();
+        allocer.start();
+    }
 }
