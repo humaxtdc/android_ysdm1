@@ -28,7 +28,7 @@ public class ThreadHandlingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thread_handling);
 
-        mTextView = (TextView)findViewById(R.id.textView_2_4);
+        mTextView = (TextView) findViewById(R.id.textView_2_4);
         mMyProcess = new MyProcess(mTextView, new MyProcess.OnNeedOptimizeProcess() {
             @Override
             public void onProcess(byte[] inputBuffer) {
@@ -36,7 +36,7 @@ public class ThreadHandlingActivity extends AppCompatActivity {
             }
         });
 
-        mBtnStart = (Button)findViewById(R.id.button_2_4_start);
+        mBtnStart = (Button) findViewById(R.id.button_2_4_start);
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,38 +55,46 @@ public class ThreadHandlingActivity extends AppCompatActivity {
 
     // ================ E 2_1 ========================
     private boolean runStatus = true;
-    private List<StringBuffer> mList;
+    private List<StringBuffer> mList;   // 수정 E2.1: mList 변수 선언
 
-    private void initE2_1() {
+    private void initE2_1() {   // 수정 E2.1: mList 변수 초기화
         mList = new ArrayList<StringBuffer>();
     }
 
     private void runAdd() {
+        runStatus = true;   // 수정 E2.1: ADD 버튼이 눌리면 runStatus 값을 true로 만들어 준다.
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (runStatus) {
                     StringBuffer addItem = new StringBuffer("");
-                    mList.add(addItem);
-                    for (StringBuffer item : mList) {
-                        item.append(1);
+                    synchronized (mList) {  // 수정 E2.1: mList는 여러 thread에서 공유되므로, 동기화 시킨다.
+                        mList.add(addItem);
+                        for (StringBuffer item : mList) {
+                            item.append(1);
+                        }
+                        Log.d(TAG, "add() -> " + mList.size());
                     }
-                    Log.d(TAG, "add()");
                 }
+                Log.d(TAG, "return from runAdd()");
             }
-        }) .start();
+        }).start();
     }
 
     private void runRemove() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(runStatus) {
-                    if (mList.size() > 0) {
-                        mList.remove(0);
-                        Log.d(TAG, "remove()");
+                while (runStatus) {
+                    synchronized (mList) {  // 수정 E2.1: mList는 여러 thread에서 공유되므로, 동기화 시킨다.
+                        if (mList.size() > 0) {
+                            mList.remove(0);
+                        }
+                        Log.d(TAG, "remove() -> " + mList.size());
                     }
                 }
+                Log.d(TAG, "return from runRemove()");
             }
         }).start();
     }
