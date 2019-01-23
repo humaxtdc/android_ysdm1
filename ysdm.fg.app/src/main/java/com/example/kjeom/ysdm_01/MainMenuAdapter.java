@@ -12,26 +12,27 @@ import org.w3c.dom.Text;
 
 import static android.content.ContentValues.TAG;
 
-public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.MainMenuViewHolder> {
-    private final String[] mItemStrings = {"Display", "aaa"};
+class MainMenuViewHolder extends RecyclerView.ViewHolder {
+    public TextView mTextView;
 
-    public class MainMenuViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
-        public MainMenuViewHolder(View v) {
-            super(v);
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
-                }
-            });
-            mTextView = (TextView)v.findViewById(R.id.mainMenuItemView);
-        }
-
-        public void setText(int position, String name) {
-            mTextView.setText(String.format("%d. %s", position + 1, name));
-        }
+    public MainMenuViewHolder(View v) {
+        super(v);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
+            }
+        });
+        mTextView = (TextView)v.findViewById(R.id.mainMenuItemView);
     }
+
+    public void setData(String name) {
+        mTextView.setText(String.format("%d. %s", getAdapterPosition() + 1, name));
+    }
+}
+
+public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuViewHolder> {
+    private final String[] mItemStrings = {"Display"};
 
     @Override
     public MainMenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -49,7 +50,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.MainMe
 
     @Override
     public void onBindViewHolder(MainMenuViewHolder vh, int position) {
-        vh.setText(position, mItemStrings[position]);
+        vh.setData(mItemStrings[position]);
     }
 
     @Override

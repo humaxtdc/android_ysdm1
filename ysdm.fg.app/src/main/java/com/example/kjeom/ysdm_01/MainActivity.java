@@ -25,11 +25,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, menuItems);
-        //RecyclerView mainManuList = (RecyclerView)findViewById(R.id.mainMenuList);
-        //mainManuList.setAdapter(adapter);
-        //mainManuList.setOnClickListener(this);
-
+        // RecyclerView 설정
         mMainMenu = (RecyclerView)findViewById(R.id.mainMenuList);
         mMainMenu.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
