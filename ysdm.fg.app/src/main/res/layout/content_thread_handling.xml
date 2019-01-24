@@ -135,8 +135,8 @@
 
     <ImageView
         android:id="@+id/imageView_2_2"
-        android:layout_width="276dp"
-        android:layout_height="147dp"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
         android:layout_marginStart="40dp"
         app:layout_constraintStart_toEndOf="@+id/button_2_2_start"
         app:layout_constraintTop_toTopOf="@+id/button_2_2_start"

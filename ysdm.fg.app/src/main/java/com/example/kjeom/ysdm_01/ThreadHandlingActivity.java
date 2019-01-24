@@ -1,17 +1,20 @@
 package com.example.kjeom.ysdm_01;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +50,7 @@ public class ThreadHandlingActivity extends AppCompatActivity {
         });
 
         initE2_1();
+        initE2_2();
         initE2_3();
     }
 
@@ -119,6 +123,87 @@ public class ThreadHandlingActivity extends AppCompatActivity {
     }
 
     /*
+     * ================ E2.2 ========================
+     * CAUTION:
+     * Add two lines to AndroidManifest.xml:
+     *
+     *   <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     *     package="com.example.kjeom.ysdm_01">
+     *     ...
+     * +   <uses-permission android:name="android.permission.INTERNET" />
+     *     ...
+     *     <application
+     *         ...
+     * +       android:usesCleartextTraffic="true">
+     *         ...
+     */
+    private Handler mE22Handler;
+    private ImageView mE22ImageView;
+
+    private void initE2_2() {
+        mE22Handler = new Handler();
+        mE22ImageView = (ImageView) findViewById(R.id.imageView_2_2);
+    }
+
+    public void onE22Start(android.view.View view) {
+        E22ImageDecoder imageDecoder = new E22ImageDecoder();
+        imageDecoder.start();
+    }
+
+    private class E22ImageDecoder extends Thread {
+        private Bitmap getBitmapFromURL(String src) {
+            try {
+                java.net.URL url = new java.net.URL(src);
+                HttpURLConnection connection = (HttpURLConnection) url
+                        .openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                return BitmapFactory.decodeStream(input);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        String[] urls = {
+                "http://ftp.humaxdigital.com/main.html?download&weblink=b609a6ec38c9c71d582bdd460b487683&realfilename=1.jpeg",
+                "http://ftp.humaxdigital.com/main.html?download&weblink=eebd9116758a61b1465de2def5d88dfc&realfilename=2.png",
+                "http://ftp.humaxdigital.com/main.html?download&weblink=db9aa8a762d9597177f0bf8b341b9a72&realfilename=3.jpg",
+                "http://ftp.humaxdigital.com/main.html?download&weblink=b7397388055d9d5903eba84ceea4c2ba&realfilename=4.jpeg",
+        };
+        Bitmap bitmap;
+
+        @Override
+        public void run() {
+            for (String url : urls) {
+                bitmap = getBitmapFromURL(url);
+
+                // RESIZE
+                int width = bitmap.getWidth();
+                int height = bitmap.getHeight();
+                while (height > 150) {
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (width * 150) / height, 150, true);
+                    width = bitmap.getWidth();
+                    height = bitmap.getHeight();
+                }
+
+                mE22Handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mE22ImageView.setImageBitmap(bitmap);
+                    }
+                });
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /*
      * ================ E2.3 ========================
      */
     private TextView mMemStatView;
@@ -126,7 +211,7 @@ public class ThreadHandlingActivity extends AppCompatActivity {
     private Runnable mE23MemReporter;
 
     private void initE2_3() {
-        mMemStatView = (TextView)findViewById(R.id.textView_2_3);
+        mMemStatView = (TextView) findViewById(R.id.textView_2_3);
         mE23MemReporter = new MemReporter();
         mE23Handler = new Handler();
         mE23Handler.postDelayed(mE23MemReporter, 500);
@@ -142,7 +227,7 @@ public class ThreadHandlingActivity extends AppCompatActivity {
             mMemStatView.setText(memStat);
             mE23Handler.postDelayed(mE23MemReporter, 500);
         }
-    };
+    }
 
     private class Allocer extends Thread {
         List<byte[]> buf = new ArrayList<byte[]>();
@@ -151,6 +236,7 @@ public class ThreadHandlingActivity extends AppCompatActivity {
             byte aaa[] = new byte[20 * 1024 * 1024];
             buf.add(aaa);
         }
+
         public void run() {
             while (true) {
                 alloc20MB();
