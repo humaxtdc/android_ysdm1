@@ -131,4 +131,9 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
+### tag ###
+cscope.files
+cscope.out
+tags
+
 # End of https://www.gitignore.io/api/androidstudio
