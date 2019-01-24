@@ -54,10 +54,16 @@ public class ThreadHandlingActivity extends AppCompatActivity {
         initE2_3();
     }
 
+    /*
+     * ================ E2.4 ========================
+     */
     private void makeYourCode(byte[] inputBuffer) {
         // Do optimize
+        Thread.currentThread().interrupt();
         byte[] processedBuffer = mMyProcess.process(inputBuffer);
+        Thread.currentThread().interrupt();
         mMyProcess.sendBuffer(processedBuffer);
+        Thread.currentThread().interrupt();
     }
 
     /*
