@@ -1,6 +1,7 @@
 package com.example.kjeom.ysdm_01;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,14 +28,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToActivity1(android.view.View view) {
-        this.view = view;
         Intent intent = new Intent(this, DisplayActivity.class);
         startActivity(intent);
     }
 
     public void goToActivity2(android.view.View view) {
-        this.view = view;
         Intent intent = new Intent(this, ThreadHandlingActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToActivity3(android.view.View view) {
+        Intent intent = new Intent(this, DataStorageActivity.class);
         startActivity(intent);
     }
 }
