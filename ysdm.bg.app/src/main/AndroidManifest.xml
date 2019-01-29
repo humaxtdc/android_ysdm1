@@ -8,7 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name="com.example.ysdm_bg_app.BgApplication">
         <provider
             android:name=".E32ContentProvider"
             android:authorities="com.example.ysdm_bg_app.provider"
