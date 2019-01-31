@@ -14,7 +14,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import static android.content.ContentValues.TAG;
+import com.example.e32contract.E32Contract;
 
 public class DataStorageActivity extends AppCompatActivity {
     private static final String TAG = DataStorageActivity.class.getSimpleName();
@@ -53,7 +53,6 @@ public class DataStorageActivity extends AppCompatActivity {
     /*
      * ================ E3.2, 3.3 ========================
      */
-    String url = "content://com.example.ysdm_bg_app.provider/table_e32";
     ContentResolver resolver;
     ContentObserver observer = new ContentObserver(new Handler()) {
         @Override
@@ -76,7 +75,7 @@ public class DataStorageActivity extends AppCompatActivity {
 
     private void initE32() {
         resolver = getContentResolver();
-        resolver.registerContentObserver(Uri.parse(url), true, observer);
+        resolver.registerContentObserver(E32Contract.URI_E32, true, observer);
     }
 
     public void onE32Save(android.view.View view) {
@@ -84,25 +83,31 @@ public class DataStorageActivity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         TextView viewAge = (TextView) findViewById(R.id.editText_3_age);
         TextView viewName = (TextView) findViewById(R.id.editText_3_name);
-        values.put("name", viewName.getText().toString());
-        values.put("age", viewAge.getText().toString());
-        resolver.insert(Uri.parse(url), values);
+        values.put(E32Contract.E32Columns.NAME, viewName.getText().toString());
+        values.put(E32Contract.E32Columns.AGE, viewAge.getText().toString());
+        resolver.insert(E32Contract.URI_E32, values);
         Log.d(TAG, "onE32Save() }");
     }
 
     public void onE33PrintAll(android.view.View view) {
-        Log.d(TAG, "onE33PrintAll() {");
-        Cursor c = resolver.query(Uri.parse(url), null, null, null, null);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "onE33PrintAll() {");
+                Cursor c = resolver.query(E32Contract.URI_E32, null, null, null, null);
 
-        if (c == null) {
-            return;
-        }
-        while (c.moveToNext()) {
-            String strId = c.getString(c.getColumnIndex("_ID"));
-            String strAge = c.getString(c.getColumnIndex("age"));
-            String strName = c.getString(c.getColumnIndex("name"));
-            Log.d(TAG, "item (" + strId + ", " + strAge + ", " + strName + ")");
-        }
-        Log.d(TAG, "onE33PrintAll() }");
+                if (c == null) {
+                    Log.d(TAG, "onE33PrintAll() cursor is null. }");
+                    return;
+                }
+                while (c.moveToNext()) {
+                    String strId = c.getString(c.getColumnIndex(E32Contract.E32Columns._ID));
+                    String strAge = c.getString(c.getColumnIndex(E32Contract.E32Columns.AGE));
+                    String strName = c.getString(c.getColumnIndex(E32Contract.E32Columns.NAME));
+                    Log.d(TAG, "item (" + strId + ", " + strAge + ", " + strName + ")");
+                }
+                Log.d(TAG, "onE33PrintAll() }");
+            }
+        }).start();
     }
 }
