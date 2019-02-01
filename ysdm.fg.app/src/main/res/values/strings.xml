@@ -6,4 +6,5 @@
     <string name="_3_datastorage">3. DataStorage</string>
     <string name="_1_window_size">1. Window Size:</string>
     <string name="title_activity_thread_handling">ThreadHandlingActivity</string>
+    <string name="title_activity_broadcast_receiver">4. Broadcast Receiver</string>
 </resources>

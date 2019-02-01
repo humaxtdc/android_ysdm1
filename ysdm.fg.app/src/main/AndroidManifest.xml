@@ -12,7 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DataStorageActivity"></activity>
+        <activity
+            android:name=".SendBroadcastActivity"
+            android:label="@string/title_activity_broadcast_receiver"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".DataStorageActivity" />
         <activity
             android:name=".ThreadHandlingActivity"
             android:label="@string/title_activity_thread_handling"
@@ -34,5 +38,4 @@
                 android:value="com.example.kjeom.ysdm_01.MainActivity" />
         </activity>
     </application>
-
 </manifest>
