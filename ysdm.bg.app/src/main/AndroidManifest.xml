@@ -15,13 +15,6 @@
             android:authorities="com.example.ysdm_bg_app.provider"
             android:enabled="true"
             android:exported="true"></provider>
-        <receiver
-            android:name=".E4BroadcastReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.media.VOLUME_CHANGED_ACTION" />
-            </intent-filter>
-        </receiver>
 
         <activity android:name=".MainActivity">
             <intent-filter>
