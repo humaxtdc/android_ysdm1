@@ -39,4 +39,19 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SendBroadcastActivity.class);
         startActivity(intent);
     }
+
+    public void goToActivity5(View view) {
+        Intent intent = new Intent(this, MediaActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToActivity6(View view) {
+        Intent intent = new Intent(this, ServiceActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToActivity7(View view) {
+        Intent intent = new Intent(this, JNIActivity.class);
+        startActivity(intent);
+    }
 }
