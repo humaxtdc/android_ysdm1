@@ -20,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="148dp"
+        android:onClick="onE51Play"
         android:text="Play"
         app:layout_constraintStart_toEndOf="@+id/textView16"
         app:layout_constraintTop_toTopOf="@+id/textView16" />
@@ -29,6 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="108dp"
+        android:onClick="onE51Stop"
         android:text="Stop"
         app:layout_constraintStart_toEndOf="@+id/button12"
         app:layout_constraintTop_toTopOf="@+id/button12" />
