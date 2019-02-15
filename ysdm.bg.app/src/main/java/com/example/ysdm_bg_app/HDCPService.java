@@ -91,6 +91,7 @@ public class HDCPService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind()");
+        mHDCPMonitor.start();
         return mMessenger.getBinder();
     }
 
@@ -102,5 +103,6 @@ public class HDCPService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy()");
+        mHDCPMonitor.stop();
     }
 }

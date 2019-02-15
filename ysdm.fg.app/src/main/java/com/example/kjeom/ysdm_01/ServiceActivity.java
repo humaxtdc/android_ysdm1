@@ -56,10 +56,9 @@ public class ServiceActivity extends AppCompatActivity {
         }
     };
 
-    @Override
-    public void onResume() {
-        Log.d(TAG, "onResume()");
-        super.onResume();
+    public void onE61StartHDCPService(View view) {
+        Log.d(TAG, "onE61StartHDCPService()");
+        if (mBound) return;
         Intent intent = new Intent();
         //intent.setComponent(new ComponentName("com.example.ysdm_bg_app","com.example.ysdm_bg_app.HDCPService"));
         intent.setAction("com.example.ysdm_bg_app.START_HDCP_SERVICE");
@@ -68,41 +67,14 @@ public class ServiceActivity extends AppCompatActivity {
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    @Override
-    public void onPause() {
-        Log.d(TAG, "onPause()");
-        super.onPause();
+    public void onE62ClearPopup(View view) {
+        Log.d(TAG, "onE62ClearPopup()");
+        if (!mBound) return;
         // Unbind from the service
         if (mBound) {
             Log.d(TAG, "unbindService()");
             unbindService(mConnection);
             mBound = false;
-        }
-    }
-
-    public void onE61StartHDCPService(View view) {
-        Log.d(TAG, "onE61StartHDCPService()");
-        if (!mBound) return;
-        // Create and send a message to the service, using a supported 'what' value
-        Message msg = Message.obtain(null, 1, 0, 0);
-        try {
-            Log.d(TAG, "send message 1");
-            mService.send(msg);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void onE62ClearPopup(View view) {
-        Log.d(TAG, "onE62ClearPopup()");
-        if (!mBound) return;
-        // Create and send a message to the service, using a supported 'what' value
-        Message msg = Message.obtain(null, 2, 0, 0);
-        try {
-            Log.d(TAG, "send message 2");
-            mService.send(msg);
-        } catch (RemoteException e) {
-            e.printStackTrace();
         }
     }
 }
