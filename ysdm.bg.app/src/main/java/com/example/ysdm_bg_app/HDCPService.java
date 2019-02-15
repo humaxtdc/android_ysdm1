@@ -1,6 +1,7 @@
 package com.example.ysdm_bg_app;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
@@ -33,6 +34,7 @@ public class HDCPService extends Service {
     class HDCPMonitor implements Runnable {
         private boolean bRunning = false;
         int cnt = 0;
+        String prevStatus = "false";
 
         @Override
         public void run() {
@@ -40,8 +42,14 @@ public class HDCPService extends Service {
                 Log.d(TAG, "not running");
                 return;
             }
-            String prop = getSystemProperty("humax.hdcp.test");
-            Log.d(TAG, String.valueOf(cnt++) + " humax.hdcp.test = " + prop);
+            String curStatus = getSystemProperty("humax.hdcp.test");
+            Log.d(TAG, String.valueOf(cnt++) + " humax.hdcp.test = [" + curStatus + "]");
+            if (!curStatus.equals(prevStatus)) {
+                if (curStatus.equals("true")) {
+                    sendHDCPError();
+                }
+                prevStatus = curStatus;
+            }
             mHDCPServiceHandler.postDelayed(mHDCPMonitor, 500);
         }
 
@@ -59,6 +67,16 @@ public class HDCPService extends Service {
             Log.d(TAG, "stop()");
             bRunning = false;
         }
+    }
+
+    private void sendHDCPError() {
+        Log.d(TAG, "sendHDCPError()");
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName("com.example.kjeom.ysdm_01", "com.example.kjeom.ysdm_01.OnHDCPErrorActivity"));
+        //intent.setAction("com.example.kjeom.ysdm_01.OnHDCPErrorActivity");
+        //intent.setPackage("com.example.kjeom.ysdm_01");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     private Handler mHDCPServiceHandler = new Handler();
