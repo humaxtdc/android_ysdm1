@@ -4,14 +4,16 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 public class ServiceActivity extends AppCompatActivity {
     private static final String TAG = ServiceActivity.class.getSimpleName();
@@ -75,6 +77,57 @@ public class ServiceActivity extends AppCompatActivity {
             Log.d(TAG, "unbindService()");
             unbindService(mConnection);
             mBound = false;
+        }
+    }
+
+    public void onE63ClearPopup(View view) {
+        Log.d(TAG, "onE63ClearPopup()");
+        if (requestCustomPermission()) {
+            Log.d(TAG, "has permission");
+            if (mBound) {
+                Log.d(TAG, "unbindService()");
+                unbindService(mConnection);
+                mBound = false;
+            }
+        }
+    }
+
+    private boolean requestCustomPermission() {
+        int permissionCheck = ContextCompat.checkSelfPermission(this,"com.humaxdigital.test.ACCESS_ONLY_MY_PERMISSION" );
+
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Permission granted.");
+            return true;
+        } else {
+            Log.d(TAG, "No permission.");
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, "com.humaxdigital.test.ACCESS_ONLY_MY_PERMISSION")) {
+                Toast.makeText(this, "Need custom permission acceptance", Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{"com.humaxdigital.test.ACCESS_ONLY_MY_PERMISSION"}, 1);
+            }
+            return false;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        Log.d(TAG, "Permission allowed.");
+                        Toast.makeText(this, "Permission allowed.", Toast.LENGTH_LONG).show();
+                    }
+                    else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                        Log.d(TAG, "Permission denied.");
+                        Toast.makeText(this, "Permission denied.", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Log.d(TAG, "Permission not allowed.");
+                    Toast.makeText(this, "Permission not allowed.", Toast.LENGTH_LONG).show();
+                }
+                break;
         }
     }
 }

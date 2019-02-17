@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ysdm_bg_app">
 
+    <permission
+        android:name="com.humaxdigital.test.ACCESS_ONLY_MY_PERMISSION"
+        android:label="E63 Permission"
+        android:permissionGroup="android.permission-group.anonymous"
+        android:protectionLevel="dangerous" />
+
     <application
         android:name=".BgApplication"
         android:allowBackup="true"
@@ -15,7 +21,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.ysdm_bg_app.START_HDCP_SERVICE"/>
+                <action android:name="com.example.ysdm_bg_app.START_HDCP_SERVICE" />
             </intent-filter>
         </service>
 
